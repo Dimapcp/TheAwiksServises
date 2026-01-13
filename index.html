@@ -3,23 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:wght@900&family=Oswald:wght@200..700&family=Tangerine:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/lang.js"></script>
+    <script src="js/search.js" defer></script>
     <link rel="icon" href="images/logo.jpg" type="image/jpg">
     <title>TAS, Main Page</title>
 </head>
 <body>
 <header>
-    <img class="near_nav_logo" src="images/logo.jpg">
     <nav>
+         <img class="near_nav_logo" src="images/logo.jpg">
         <ul class="nav-list">
-            <li class="nav-item" href="#">Home</li>
-            <li class="nav-item" href="#">Servises</li>
-            <li class="nav-item" href="#">Creators</li>
-            <li class="nav-item" href="#">Servises</li>
-            <li class="nav-item" href="#">Creations</li>
-        </ul>
+            <li data-i18n class="nav-item"><button href="#">Home</button></li>
+            <li data-i18n class="nav-item"><button href="#">Servises</button></li>
+            <li data-i18n class="nav-item"><button href="#">Creators</button></li>
+            <li data-i18n class="nav-item"><button href="#">Servises</button></li>
+            <li data-i18n class="nav-item"><button href="#">Creations</button></li>
+       </ul>
+        <form class="search-form" action="/search.html" method="GET">
+        <input type="search" name="q" placeholder="Search tools..." required>
+        </form>
+        <div class="lang-switch">
+            <button data-lang="en">EN</button>
+            <button data-lang="ua">UA</button>
+             <button data-lang="ru">RU</button>
+        </div>
     </nav>
 </header>
+<!-- header finished -->
+<main>
+    <div class="Big_buton_take_product">
+        <button class="BBTP_inside" href="#">Buy now!</button>
+    </div>
     <h1 id="h1_firstpage">The<span style="color: lightgreen;">Awiks</span><span style="color: rgb(0, 30, 255);">Servises</span></h1>
     <h2 class="Wawd">What are we doing?</h2>
     <h4>Awiks are no wery big team/compamy but we are creating: 
@@ -31,17 +49,36 @@
     <li class="wawd_list1_item">Memes</li>
     </ul></h4>
     <p>Easy way to take that virtual product that you want!</p>
-    <article>Our servises rules:
+    <article><h3>Our servises pluses:</h3>
         <ul class="ser_rul_ul">
         <li class="ser_rul_litem">Working time from 1 - 4 days</li>
         <li class="ser_rul_litem">Price not bigger than 15$! </li>
-        <li class="ser_rul_litem">Stuy is contacteble</li>
-        </ul> 
-        <section id="news"></section>
+        <li class="ser_rul_litem">Stuf is contacteble</li>
+        </ul>
     </article>
-
+    <h2 class="team">Our team members</h2>
+    <div class="team members">
+        <div class="tm">
+            <img class="tm" src="images/DimaTheawik.jpg">
+            <p>Dima Marmuta: Creator / Html, Css Programer</p>
+        </div>
+                <div class="tm">
+            <img class="tm" src="images/MangoDeltaBustit.png">
+            <p>Yaroslav Gagun: Desinger</p>
+        </div>
+                <div class="tm">
+            <img class="tm" src="images/MaxSplinter.jpg">
+            <p>Maxim Pustovoit: Disinger, Creative guy </p>
+        </div>
+    </div>
+</main>    
 <footer>
-
+    <div class="footer">
+        <P>The Awiks 2024 - 2026</P>
+        <button class="take_product" href="#">Buy A Product!</button>
+        <p>If you don`t understand something write here: <a href="gmail:TheAwiksSupport@gmail.com">TheAwiksSupport@gmail.com</a></p>
+    </div>
 </footer>
+
 </body>
 </html>

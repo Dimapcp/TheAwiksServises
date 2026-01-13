@@ -1,0 +1,108 @@
+:root {
+    font-family: "oswald" "montserrat";
+}
+.near_nav_logo {
+    width: 200px;
+    height:240px;
+
+}
+body {
+  margin: 0;
+}
+nav {
+  display: flex;
+  align-items: center;        /* ← фикс */
+  background-color: black;
+  padding: 0 20px;
+}
+
+/* .nav-list {
+    list-style: none;
+    display: flex;
+    align-items:  center;
+} */
+button{
+    margin: 5px;
+    padding: 0px;
+    background-color: rgb(47, 120, 255);
+    color: white;
+    width: 100px;
+    height: 60px;
+    box-shadow: none;
+    padding-inline: 0px;
+    transition: 0.3s;
+}
+ button:hover{
+    margin: 5px;
+    padding: 0px;
+    background-color: white;
+    color: rgb(47, 120, 255);
+    width: 100px;
+    height: 60px;
+    box-shadow: none;
+    padding-inline: 0px;
+    cursor: pointer;
+}
+nav {
+    display: flex;
+    align-items: safe,center;
+    background-color: black;
+}
+.nav-item {
+  font-size: 20px;
+}
+
+/* .nav-item {
+    display: flex;
+    gap: 40px;
+    padding: 20px;
+    font-size: 20px;
+} */
+ .nav-list {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 40px;                  /* ← ВОТ ГДЕ gap */
+  margin: 0;
+  padding: 0;
+}
+
+.search-form input {
+  padding: 8px 14px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background: #111;
+  color: white;
+}
+
+.search-form input::placeholder {
+  color: #888;
+}
+.search-form {
+  position: static;
+}
+.search-form {
+  margin-left: auto;
+  margin-right: 100px;         
+}
+/* .Big_buton_take_product {
+    background-image: ;
+} */
+.lang-switch {
+  display: flex;
+  gap: 8px;
+  margin-left: 20px;
+}
+
+.lang-switch button {
+  background: none;
+  border: 1px solid #444;
+  color: white;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.lang-switch button:hover {
+  background: #222;
+}
