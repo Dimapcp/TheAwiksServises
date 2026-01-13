@@ -1,5 +1,5 @@
 :root {
-    font-family: "oswald" "montserrat";
+    font-family: "Oswald";
 }
 .near_nav_logo {
     width: 200px;
@@ -37,8 +37,8 @@ button{
     padding: 0px;
     background-color: white;
     color: rgb(47, 120, 255);
-    width: 100px;
-    height: 60px;
+    /* width: 100px;
+    height: 60px; */
     box-shadow: none;
     padding-inline: 0px;
     cursor: pointer;
@@ -86,23 +86,44 @@ nav {
   margin-left: auto;
   margin-right: 100px;         
 }
-/* .Big_buton_take_product {
-    background-image: ;
-} */
-.lang-switch {
+.Big_buton_take_product {
+    /* Correct path and extension (file is in ../images/ and is .png) */
+    background-image: url('../images/ofise.png');
+    background-size: cover; 
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 0; 
+    height: 500px;
+}
+.BBTP_inside {
+    background-color: rgb(255, 132, 50);
+    color: rgb(88, 164, 208);
+    font-size: 20px;
+    width: 200px;
+    height: 70px;
+}
+.BBTP_inside :hover{
+    background-color: rgb(100, 139, 219);
+    color: rgb(45, 178, 255);
+    font-size: 25px;
+    width: 213px;
+    height: 83px;
+}
+h1 {
   display: flex;
-  gap: 8px;
-  margin-left: 20px;
+  justify-content: center; 
+  align-items: center;
+  font-family: "Oswald";
+  text-shadow: #111 2px 2px 4px;
 }
-
-.lang-switch button {
-  background: none;
-  border: 1px solid #444;
-  color: white;
-  padding: 4px 8px;
-  cursor: pointer;
-}
-
-.lang-switch button:hover {
-  background: #222;
+div.srvises {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    
 }
