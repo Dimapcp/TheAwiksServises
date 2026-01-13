@@ -14,16 +14,16 @@
 <body>
 <header>
     <nav>
-         <img class="near_nav_logo" src="images/logo.jpg">
+         <a href="#"><img class="near_nav_logo" src="images/logo.jpg" alt="The Awiks Servises Logo"></a>
         <ul class="nav-list">
-            <li data-i18n class="nav-item"><button href="#">Home</button></li>
-            <li data-i18n class="nav-item"><button href="#">Servises</button></li>
-            <li data-i18n class="nav-item"><button href="#">Creators</button></li>
-            <li data-i18n class="nav-item"><button href="#">Servises</button></li>
-            <li data-i18n class="nav-item"><button href="#">Creations</button></li>
+            <li data-i18n class="nav-item"><button onclick="location.href='#'">Home</button></li>
+            <li data-i18n class="nav-item"><button onclick="location.href='#'">Servises</button></li>
+            <li data-i18n class="nav-item"><button onclick="location.href='#'">Creators</button></li>
+            <li data-i18n class="nav-item"><button onclick="location.href='#'">Servises</button></li>
+            <li data-i18n class="nav-item"><button onclick="location.href='#'">Creations</button></li>
        </ul>
         <form class="search-form" action="/search.html" method="GET">
-        <input type="search" name="q" placeholder="Search tools..." required>
+        <input type="search" name="q" placeholder="Search..." required>
         </form>
         
     </nav>
@@ -31,7 +31,7 @@
 <!-- header finished -->
 <main>
     <div class="Big_buton_take_product">
-        <button class="BBTP_inside" href="#">Buy now!</button>
+        <button class="BBTP_inside" onclick="location.href='#'">Buy now!</button>
     </div>
     <section id="servises">
     <div class="div-srv">
@@ -61,24 +61,27 @@
             <img class="tm" src="images/DimaTheawik.jpg">
             <p class="info">Dima Marmuta</p>
             <p class="info">Owner / Html, Css Programer</p>
+            <a class="info" href="portfolio">More info...</a>
         </div>
             <div class="tm">
             <img class="tm" src="images/MangoDeltaBustit.png">
             <p class="info">Yaroslav Gagun</p>
             <p class="info">Desinger, Virus Destoreyer</p>
+            <a class="info"href="portfolio">More info...</a>
         </div>
             <div class="tm">
             <img class="tm" src="images/MaxSplinter.jpg">
             <p class="info">Maxim Pustovoit</p>
             <p class="info">Disinger, Creative guy</p>
+            <a class="info" href="portfolio">More info...</a>
         </div>
     </div>
 </main>    
 <footer>
     <div class="footer">
         <P>The Awiks 2024 - 2026</P>
-        <button class="take_product" href="#">Buy A Product!</button>
-        <p>If you don`t understand something write here: <a href="gmail:TheAwiksSupport@gmail.com">TheAwiksSupport@gmail.com</a></p>
+        <button class="take_product" onclick="location.href='#'">Buy A Product!</button>
+        <p>If you don`t understand something write here: <a href="email:TheAwiksSupport@gmail.com">TheAwiksSupport@gmail.com</a></p>
     </div>
 </footer>
 
