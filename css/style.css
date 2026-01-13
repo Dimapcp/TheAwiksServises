@@ -119,11 +119,45 @@ h1 {
   font-family: "Oswald";
   text-shadow: #111 2px 2px 4px;
 }
-div.srvises {
+div.div-srv {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     text-align: center;
-    
+    background-color: aliceblue;
+    margin: 0 auto;
+}
+div.div-srv ul{
+    list-style: none;
+}
+div.team {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+div.team img{
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    padding-left: 0px;
+}
+div.tm .info{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   margin-bottom: 20px;
+}
+h2.team {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+footer {
+    background-color: black;
+    color: white;
 }
