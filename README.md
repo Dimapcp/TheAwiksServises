@@ -1,2 +1,1 @@
-
-This project isn`t alowwed to copy or modifaction without any watermark!
+If you want to add any sratch project whrite me
