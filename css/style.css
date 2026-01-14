@@ -166,3 +166,81 @@ footer {
     text-align: center;
     justify-content: center;
 }
+.Pagethatyouarein {
+  background-color: red;
+  color: white;
+  border: none;
+}
+.container2 {
+  background-color: aliceblue;
+  display: flex; 
+}
+h1.portfoliph1  {
+  font-size: 100px;
+}
+div.chelik img.tm{
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    padding-left: 0px;
+}
+div.chelik {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    background-color: aliceblue;
+    margin: 0 auto 30px;
+    border-radius: 10%;
+    font-size: 25px;
+    width:1025px;
+}
+.ranks {
+    font-size: 20px;
+    list-style: none;
+}
+.rank {
+    list-style: none;
+    font-size: 25px;
+}
+.ranks :nth-child(1) {
+    color: rgb(0, 0, 0);
+}
+.ranks :nth-child(2) {
+    color: rgb(0, 0, 0);
+}
+.ranks :nth-child(3) {
+    color: rgb(51, 255, 0);
+}
+.ranks :nth-child(4) {
+    color: rgb(3, 62, 255);
+}
+.ranks :nth-child(5) {
+    color: rgb(255, 72, 0);
+}
+.ranks :nth-child(6) {
+    color: rgb(255, 209, 42);
+}
+div.rankbox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(249, 249, 108);
+    margin: 0 auto 25px;
+    border-radius: 10%;
+    width: 300px;
+    height: 400px;
+    
+}
+div.rankbox h3 {
+  align-items: center;
+}
+.backup {
+  background-color: red;
+  color: white;
+}
