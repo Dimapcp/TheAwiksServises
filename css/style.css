@@ -1,5 +1,6 @@
 :root {
     font-family: "Oswald";
+    scroll-behavior: smooth;
 }
 .near_nav_logo {
     width: 200px;
@@ -243,4 +244,29 @@ div.rankbox h3 {
 .backup {
   background-color: red;
   color: white;
+}
+.cattainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-size: 30px;
+    text-align: center;
+}
+img.contacts-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 30%;
+}
+a.contacts-img {
+    font-size: 25px;
+}
+h1.Contacts📞 {
+    font-size: 60px;
+}
+img.contacts-main-img {
+    width: 700px;
+    height: 400px;
+    margin-bottom: 20px;
+    border-radius: 10%;
 }
