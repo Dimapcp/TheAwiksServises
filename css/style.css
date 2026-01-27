@@ -12,7 +12,7 @@ body {
 }
 nav {
   display: flex;
-  align-items: center;        /* ← фикс */
+  align-items: center;        
   background-color: black;
   padding: 0 20px;
 }
@@ -63,7 +63,7 @@ nav {
   list-style: none;
   display: flex;
   align-items: center;
-  gap: 40px;                  /* ← ВОТ ГДЕ gap */
+  gap: 40px;                  
   margin: 0;
   padding: 0;
 }
@@ -269,4 +269,29 @@ img.contacts-main-img {
     height: 400px;
     margin-bottom: 20px;
     border-radius: 10%;
+}
+h1.h1ser1 {
+    font-size: 100px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+div.servrule {
+    margin: 0 auto 30px;
+     background-color: aliceblue;
+     border-radius: 30%;
+    min-height: 100px;
+    min-width:50px;
+    
+}
+div.servrule p{
+    font-size:auto, 10px;
+}
+div.servrule h3{
+    font-size: 40px;
+    text-shadow: #111 2px 2px 4px;
+}
+main#servises { 
+    display: flex;
+    flex-direction:row;
+    margin: 10px ;
 }

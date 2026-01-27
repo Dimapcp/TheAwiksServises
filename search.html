@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/search.js" defer></script>
+  <script src="js/search-results.js" defer></script>
+  <title>Search results</title>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="index.html"><img class="near_nav_logo" src="images/logo.jpg" alt="The Awiks Servises Logo"></a>
+      <ul class="nav-list">
+        <li data-i18n class="nav-item"><button onclick="location.href='index.html'">Home</button></li>
+        <li data-i18n class="nav-item"><button onclick="location.href='servises.html'">Servises</button></li>
+        <li data-i18n class="nav-item"><button onclick="location.href='portfolio.html'">Portfolio</button></li>
+        <li data-i18n class="nav-item"><button onclick="location.href='contacts.html'">Contacts</button></li>
+      </ul>
+      <form class="search-form" action="/search.html" method="GET">
+        <input type="search" name="q" placeholder="Search..." required>
+      </form>
+    </nav>
+  </header>
+
+  <main class="cattainer">
+    <h1 id="results-title">Search results</h1>
+    <div id="results"></div>
+  </main>
+
+  <footer>
+    <div class="footer">
+      <P>The Awiks 2024 - 2026</P>
+      <img id="discord-img" src="images/discord.jpg"  class="contacts-img" href="https://discord.gg/MhMYmCjZ">
+    </div>
+  </footer>
+</body>
+</html>
