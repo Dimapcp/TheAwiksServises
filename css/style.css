@@ -278,8 +278,8 @@ h1.h1ser1 {
 div.servrule {
     margin: 0 auto 30px;
      background-color: aliceblue;
-     border-radius: 30%;
-    min-height: 100px;
+     border-radius: 10%;
+    min-height: 50px;
     min-width:50px;
     
 }
@@ -294,4 +294,25 @@ main#servises {
     display: flex;
     flex-direction:row;
     margin: 10px ;
+}
+button.servbuton {
+    background-color:yellow;
+    color: black;
+
+}
+button.servbuton:hover {
+    background-color:rgb(255, 255, 255);
+    color: rgb(255, 0, 0);
+
+}
+.servrule2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+div.servrule2 {
+    background-color: aliceblue;
+    margin: 10px;
+    border-radius: 10%;
 }
