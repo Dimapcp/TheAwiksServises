@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Log in</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+      body { background:#f0f4fb; font-family: Arial, Helvetica, sans-serif; margin:0; }
+      .login-card { max-width:420px; margin:8vh auto; background:white; border-radius:10px; box-shadow:0 6px 18px rgba(30,50,90,0.12); padding:28px; }
+      .login-card h1 { margin:0 0 12px; font-size:22px; text-align:center; }
+      .login-card p.lead { margin:0 0 18px; color:#555; text-align:center; }
+      .login-card input[type="text"], .login-card input[type="password"] { width:100%; padding:12px 10px; margin:8px 0; border:1px solid #d6dde6; border-radius:6px; font-size:15px; }
+      .login-card button { width:100%; padding:12px; background:#2f78ff; color:#fff; border:none; border-radius:6px; font-size:16px; cursor:pointer; }
+      .login-card button:hover { background:#1f5fe6; }
+      .error { color:#b00020; margin-top:8px; text-align:center; display:none; }
+      .note { font-size:13px; color:#666; text-align:center; margin-top:12px; }
+    </style>
+  </head>
+  <body>
+    <main class="login-card" role="main">
+      <h1>Log in</h1>
+      <p class="lead">Enter credentials to proceed to the developer area.</p>
+      <form id="loginForm" autocomplete="on">
+        <input id="user" name="user" type="text" placeholder="Username" required autocomplete="username" />
+        <input id="pass" name="pass" type="password" placeholder="Password" required autocomplete="current-password" />
+        <div class="error" id="err">Invalid username or password</div>
+        <button type="submit">Sign in</button>
+      </form>
+    </main>
+
+    <script>
+      (function(){
+        const VALID_USER = 'admin';
+        const VALID_PASS = 'awiksyaderka';
+        const form = document.getElementById('loginForm');
+        const err = document.getElementById('err');
+
+        form.addEventListener('submit', function(e){
+          e.preventDefault();
+          const u = document.getElementById('user').value.trim();
+          const p = document.getElementById('pass').value;
+          if (u === VALID_USER && p === VALID_PASS) {
+            sessionStorage.setItem('devAuth', 'true');
+            // Redirect to dev page (if present)
+            window.location.href = 'devpage.html';
+            return;
+          }
+          err.style.display = 'block';
+          setTimeout(()=> err.style.display = 'none', 3000);
+        });
+      })();
+    </script>
+  </body>
+</html>
