@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const value = input.value.trim();
     if (value.toLowerCase() === 'awiksadmin12') {
-      window.location.href = 'devpage.html';
+      window.location.href = 'login.html';
       return;
     }
     if (!value) {

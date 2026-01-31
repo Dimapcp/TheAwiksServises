@@ -1,0 +1,54 @@
+:root{
+    font-family: "Oswald";
+    scroll-behavior: smooth;
+    font: "Oswald";
+}
+body {
+    background-color: aqua;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+}
+ul.upd-list {
+    list-style:decimal-leading-zero;
+
+}
+ul.upd-list li{
+    font-size: 20px;
+}
+h1 {
+    font-size: 50px;
+    color: blue;
+}
+button{
+    margin: 5px;
+    padding: 0px;
+    background-color: rgb(47, 120, 255);
+    color: white;
+    width: 100px;
+    height: 60px;
+    box-shadow: none;
+    padding-inline: 0px;
+    transition: 0.3s;
+}
+ button:hover{
+    margin: 5px;
+    padding: 0px;
+    background-color: white;
+    color: rgb(47, 120, 255);
+    /* width: 100px;
+    height: 60px; */
+    box-shadow: none;
+    padding-inline: 0px;
+    cursor: pointer;
+}
+p {
+    font-size: 30px;
+}
+p.fornowall {
+    color: red;
+    font-size: 30px;
+    margin: 10px;
+}

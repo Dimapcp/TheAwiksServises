@@ -316,3 +316,43 @@ div.servrule2 {
     margin: 10px;
     border-radius: 10%;
 }
+
+button.servbuton2.servbuton2--disabled {
+    background-color: red;
+    color: white;
+}
+
+button.servbuton2.servbuton2--disabled:hover {
+    background-color: darkred;
+}
+div.creaitonofhatred {
+    width: 600px;
+    height: 600px;
+    border-radius: 10%;
+    background-color: aliceblue;
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+img.cohimg {
+    width: 500px;
+    height: 300px;
+    align-self: center;
+}
+main#creationsmain {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+main#creationsmain h1 {
+    font-size: 100px;
+    color: blue;
+}
+div.creaitonofhatred h2 {
+    font-size: 40px;
+}

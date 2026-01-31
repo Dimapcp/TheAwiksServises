@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="css/style.css">
     <script src="js/search.js" defer></script>
     <script src="js/goodscrool.js" defer></script>
+    <script src="js/ruleagree.js" defer></script>
     <link rel="icon" href="images/logo.jpg" type="image/jpg">
     <title>TAS, Payment</title>
 </head>
@@ -21,7 +22,7 @@
             <li data-i18n class="nav-item"><button class="Pagethatyouarein" onclick="location.href='servises.html'">Servises</button></li>
             <li data-i18n class="nav-item"><button onclick="location.href='portfolio.html'">Portfolio</button></li>
             <li data-i18n class="nav-item"><button onclick="location.href='contacts.html'">Contacts</button></li>
-            <li data-i18n class="nav-item"><button onclick="location.href='#'">Creations</button></li>
+            <li data-i18n class="nav-item"><button onclick="location.href='creations.html'">Creations</button></li>
        </ul>
         <form class="search-form" action="search.html" method="GET">
         <input type="search" name="q" placeholder="Search..." required>
@@ -36,7 +37,12 @@
         <p class="psrv">To bypass the scam we ha a strict rule: Firs part you pay before taking the product, after looking on it and agreeing with it we give you full acecets and you paing for it. All simple and chill.</p>
         <p class="psrv">Now after clicking the button, you will be teleported to contacts, write to second email. If you did it but you don't get the product, write to first email. understand anything(or got scamed) write on first one email. (Thanks for buying :>)</p>
         <p>We are using Privat24 so if you buying you will pay there in hryvnias</p>
-        <button class="servbuton2" onclick="location.href='contacts.html#email'">Im ready to take order & pay!</button>
+        <form class="ruleapception" id="ruleForm" onsubmit="return false;">
+            <label class="rule-label">
+                <input type="checkbox" id="agreeRule"> I understand the rules and agree to them
+            </label>
+        </form>
+        <button class="servbuton2" disabled onclick="location.href='contacts.html#email'">Im ready to take order & pay!</button>
     </div>
 </main>
 <footer>
