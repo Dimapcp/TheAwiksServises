@@ -32,9 +32,21 @@
             localStorage.removeItem('currentUser');
         }
         updateAuthUI();
+        // After UI update, require password check if needed (run async, don't block)
+        try{ requirePasswordCheckIfNeeded().catch(e => console.warn('Password check error', e)); }catch(e){ console.warn('Password check scheduling failed', e); }
     }
     function getCurrentUser(){
         try{return JSON.parse(localStorage.getItem('currentUser')||'null');}catch(e){return null;}
+    }
+
+    // Hash a password using SHA-256, return hex string
+    async function hashPassword(password){
+        if(!password) return '';
+        const enc = new TextEncoder();
+        const data = enc.encode(password);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2,'0')).join('');
     }
 
     function registerUserForIP(ip, data){
@@ -43,6 +55,29 @@
         saveUsers(users);
         setCurrentUser(data);
     }
+
+    // Blocklist helpers
+    function loadBlockedIPs(){
+        try{return JSON.parse(localStorage.getItem('blocked_ips')||'{}');}catch(e){return {};}
+    }
+    function saveBlockedIPs(obj){
+        localStorage.setItem('blocked_ips', JSON.stringify(obj||{}));
+    }
+    function isIPBlocked(ip){
+        if(!ip) return false;
+        const obj = loadBlockedIPs();
+        return !!obj[ip];
+    }
+    function blockIP(ip){
+        if(!ip) return;
+        const obj = loadBlockedIPs();
+        obj[ip] = { blockedAt: Date.now() };
+        saveBlockedIPs(obj);
+    }
+    function getFailedAttemptsKey(ip){ return 'failed_pw_attempts_' + (ip||'unknown'); }
+    function getFailedAttempts(ip){ return parseInt(localStorage.getItem(getFailedAttemptsKey(ip))||'0',10); }
+    function incFailedAttempts(ip){ const k=getFailedAttemptsKey(ip); const v=getFailedAttempts(ip)+1; localStorage.setItem(k, String(v)); return v; }
+    function resetFailedAttempts(ip){ localStorage.removeItem(getFailedAttemptsKey(ip)); }
 
     function logout(){
         setCurrentUser(null);
@@ -109,6 +144,8 @@
                 name: payload.name || payload.email.split('@')[0],
                 email: payload.email,
                 avatar: payload.picture || '',
+                passwordHash: '',
+                passwordLastCheck: null,
                 ip: ip,
                 orders_pending: 0,
                 orders_ready: 0,
@@ -120,28 +157,13 @@
             }else{
                 setCurrentUser(user);
             }
-            // Try to send welcome email when available
-            try{ sendWelcomeEmail(user.email, user.name); }catch(e){}
             updateAuthUI();
         }catch(e){
             console.error('Error parsing Google token:', e);
         }
     }
 
-    function sendWelcomeEmail(email, name){
-        if(!email) return;
-        try{
-            const key = 'welcome_sent_' + email;
-            if(localStorage.getItem(key)) return;
-            const subject = encodeURIComponent('Поздравляем с регистрацией на The Awiks');
-            const body = encodeURIComponent('Поздравляем с регистрацией на The Awiks' + (name? (', ' + name) : '') + '! Спасибо за регистрацию.');
-            // Open user's mail client with prefilled message (best-effort from client-side)
-            window.open(`mailto:${email}?subject=${subject}&body=${body}`);
-            localStorage.setItem(key, '1');
-        }catch(e){
-            console.warn('sendWelcomeEmail failed', e);
-        }
-    }
+    // sendWelcomeEmail removed: no automatic mailto from client-side
 
     function deleteCurrentAccount(){
         const user = getCurrentUser();
@@ -156,7 +178,115 @@
         return true;
     }
 
+    // If current user exists and passwordLastCheck is older than 3 days, require password re-entry
+    async function requirePasswordCheckIfNeeded(){
+        const user = getCurrentUser();
+        if(!user) return;
+        const now = Date.now();
+        // Production default: 3 days.
+        const threeDays = 3 * 24 * 60 * 60 * 1000; // 3 days
+        const last = user.passwordLastCheck || 0;
+        if(now - last <= threeDays) return; // still valid
+
+        // Show modal to verify or set password
+        await showPasswordPromptModal(user);
+    }
+
+    function showPasswordPromptModal(user){
+        return new Promise(async (resolve)=>{
+            // Add blur style to page (except modal)
+            if(!document.getElementById('auth-modal-blur-style')){
+                const st = document.createElement('style');
+                st.id = 'auth-modal-blur-style';
+                st.textContent = 'body > *:not(#passwordCheckModal){filter:blur(5px);pointer-events:none;user-select:none;} #passwordCheckModal{pointer-events:auto;}';
+                document.head.appendChild(st);
+            }
+            const modal = document.createElement('div');
+            modal.id = 'passwordCheckModal';
+            modal.style.cssText = `position: fixed;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;z-index:10002;`;
+            const card = document.createElement('div');
+            card.style.cssText = `background:white;border-radius:12px;padding:28px;max-width:420px;width:90%;text-align:center;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;z-index:10003;`;
+
+            const title = document.createElement('h3');
+            title.textContent = user.passwordHash? 'Password check required' : 'Set a password for your account';
+            const msg = document.createElement('p');
+            msg.textContent = user.passwordHash? 'For security, please re-enter your password.' : 'You do not have a password. Please set one now to secure your account.';
+
+            const pwd = document.createElement('input');
+            pwd.type = 'password';
+            pwd.placeholder = 'Password';
+            pwd.style.cssText = 'width:100%;padding:10px;margin:8px 0;border:1px solid #ddd;border-radius:6px;';
+
+            const pwd2 = document.createElement('input');
+            pwd2.type = 'password';
+            pwd2.placeholder = 'Confirm password';
+            pwd2.style.cssText = 'width:100%;padding:10px;margin:8px 0;border:1px solid #ddd;border-radius:6px;display:none;';
+
+            const btn = document.createElement('button');
+            btn.textContent = user.passwordHash? 'Verify' : 'Set Password';
+            btn.style.cssText = 'width:100%;padding:10px;background:#4f46e5;color:#fff;border:none;border-radius:6px;cursor:pointer;margin-top:8px;';
+
+            if(!user.passwordHash){ pwd2.style.display = 'block'; }
+
+            btn.addEventListener('click', async function(){
+                const val = pwd.value.trim();
+                if(!val || val.length < 6){ alert('Password must be at least 6 characters'); return; }
+                if(!user.passwordHash){ // set new password
+                    if(pwd2.value.trim() !== val){ alert('Passwords do not match'); return; }
+                    const h = await hashPassword(val);
+                    user.passwordHash = h;
+                    user.passwordLastCheck = Date.now();
+                    setCurrentUser(user);
+                    resetFailedAttempts(user.ip || window._currentIP);
+                    if(document.head.querySelector('#auth-modal-blur-style')) document.head.removeChild(document.head.querySelector('#auth-modal-blur-style'));
+                    document.body.removeChild(modal);
+                    resolve(true);
+                }else{ // verify
+                    const h = await hashPassword(val);
+                    if(h === user.passwordHash){
+                        user.passwordLastCheck = Date.now();
+                        setCurrentUser(user);
+                        resetFailedAttempts(user.ip || window._currentIP);
+                        if(document.head.querySelector('#auth-modal-blur-style')) document.head.removeChild(document.head.querySelector('#auth-modal-blur-style'));
+                        document.body.removeChild(modal);
+                        resolve(true);
+                    }else{
+                        const ip = user.ip || window._currentIP || 'unknown';
+                        const attempts = incFailedAttempts(ip);
+                        if(attempts >= 3){
+                            // block IP and logout
+                            blockIP(ip);
+                            resetFailedAttempts(ip);
+                            if(window._auth && window._auth.logout) window._auth.logout();
+                            if(document.head.querySelector('#auth-modal-blur-style')) document.head.removeChild(document.head.querySelector('#auth-modal-blur-style'));
+                            document.body.removeChild(modal);
+                            alert('Too many incorrect attempts. You have been logged out and this IP is blocked.');
+                            resolve(false);
+                        }else{
+                            alert('Incorrect password. Attempts: '+attempts+' of 3');
+                        }
+                    }
+                }
+            });
+
+            card.appendChild(title);
+            card.appendChild(msg);
+            card.appendChild(pwd);
+            card.appendChild(pwd2);
+            card.appendChild(btn);
+            modal.appendChild(card);
+            document.body.appendChild(modal);
+            pwd.focus();
+        });
+    }
+
     function showLoginModal(){
+        // Prevent sign-in when IP is blocked
+        const ipNow = window._currentIP || 'unknown';
+        if(isIPBlocked(ipNow)){
+            alert('This IP is blocked from signing in. Contact support.');
+            return;
+        }
         // Create a beautiful login modal
         const modal = document.createElement('div');
         modal.id = 'loginModal';
@@ -222,19 +352,34 @@
             font-size: 14px;
             box-sizing: border-box;
         `;
-        
-        const avatarInput = document.createElement('input');
-        avatarInput.type = 'url';
-        avatarInput.placeholder = 'Avatar URL (optional)';
-        avatarInput.style.cssText = `
+
+        const passwordInput = document.createElement('input');
+        passwordInput.type = 'password';
+        passwordInput.placeholder = 'Password (min 6 chars)';
+        passwordInput.style.cssText = `
             width: 100%;
             padding: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
             border: 1px solid #d1d5db;
             border-radius: 6px;
             font-size: 14px;
             box-sizing: border-box;
         `;
+
+        const passwordConfirm = document.createElement('input');
+        passwordConfirm.type = 'password';
+        passwordConfirm.placeholder = 'Confirm password';
+        passwordConfirm.style.cssText = `
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            box-sizing: border-box;
+        `;
+        
+        // avatar URL removed from modal — users can upload avatar later in account page
         
         const signInBtn = document.createElement('button');
         signInBtn.textContent = 'Sign In';
@@ -271,40 +416,37 @@
         closeBtn.onmouseover = () => closeBtn.style.background = '#e5e7eb';
         closeBtn.onmouseout = () => closeBtn.style.background = '#f3f4f6';
         
-        signInBtn.addEventListener('click', function(){
+        signInBtn.addEventListener('click', async function(){
             const name = nameInput.value.trim();
             const email = emailInput.value.trim();
-            const avatar = avatarInput.value.trim();
-            
-            if(!name){
-                alert('Please enter your name');
-                return;
-            }
-            if(!email){
-                alert('Please enter your email');
-                return;
-            }
-            
+            const pwd = passwordInput.value || '';
+            const pwd2 = passwordConfirm.value || '';
+
+            if(!name){ alert('Please enter your name'); return; }
+            if(!email){ alert('Please enter your email'); return; }
+            if(!pwd || pwd.length < 6){ alert('Password must be at least 6 characters'); return; }
+            if(pwd !== pwd2){ alert('Passwords do not match'); return; }
+
             const ip = window._currentIP || 'unknown';
+            const hashed = await hashPassword(pwd);
             const user = {
                 name: name,
                 email: email,
-                avatar: avatar,
+                avatar: '',
+                passwordHash: hashed,
+                passwordLastCheck: Date.now(),
                 ip: ip,
                 orders_pending: 0,
                 orders_ready: 0,
                 money_invested: 0
             };
-            
+
             if(ip !== 'unknown'){
                 registerUserForIP(ip, user);
             }else{
                 setCurrentUser(user);
             }
 
-            // Try to send a welcome email (opens user's mail client via mailto)
-            try{ sendWelcomeEmail(user.email, user.name); }catch(e){}
-            
             document.body.removeChild(modal);
             updateAuthUI();
         });
@@ -324,7 +466,8 @@
         card.appendChild(subtitle);
         card.appendChild(nameInput);
         card.appendChild(emailInput);
-        card.appendChild(avatarInput);
+        card.appendChild(passwordInput);
+        card.appendChild(passwordConfirm);
         card.appendChild(signInBtn);
         card.appendChild(closeBtn);
         modal.appendChild(card);
@@ -386,6 +529,7 @@
             if(e.key === 'currentUser' || e.key === 'users_by_ip'){
                 // currentUser or users_by_ip changed in another tab, update UI
                 updateAuthUI();
+                try{ requirePasswordCheckIfNeeded(); }catch(err){ console.warn('password check on storage failed', err); }
             }
         });
         
@@ -398,5 +542,5 @@
     }
 
     document.addEventListener('DOMContentLoaded', init);
-    window._auth = { getCurrentUser, setCurrentUser, loadUsers, saveUsers, logout, deleteCurrentAccount, sendWelcomeEmail };
+    window._auth = { getCurrentUser, setCurrentUser, loadUsers, saveUsers, logout, deleteCurrentAccount };
 })();

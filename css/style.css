@@ -448,3 +448,10 @@ div#userInfo {
 .invs {
     color: darkgreen;
 }
+.avatarset {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
