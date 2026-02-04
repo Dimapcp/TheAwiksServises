@@ -87,6 +87,70 @@
         }
     }
 
+    // Quick login button: allows user to type name/password to access account from any page
+    function showQuickLoginPrompt(){
+        const user = getCurrentUser();
+        if(user){
+            alert('You are already logged in as ' + (user.name||'User'));
+            return;
+        }
+        const ip = window._currentIP || 'unknown';
+        if(isIPBlocked(ip)){
+            alert('This IP is blocked from signing in.');
+            return;
+        }
+        const modal = document.createElement('div');
+        modal.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:10001;`;
+        const card = document.createElement('div');
+        card.style.cssText = `background:white;border-radius:12px;padding:32px;max-width:380px;width:90%;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;`;
+        const title = document.createElement('h3');
+        title.textContent = 'Quick Login';
+        title.style.cssText = 'margin:0 0 8px 0;color:#1f2937;';
+        const subtitle = document.createElement('p');
+        subtitle.textContent = 'Enter your name and password';
+        subtitle.style.cssText = 'margin:0 0 16px 0;color:#6b7280;font-size:14px;';
+        const nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.placeholder = 'Name';
+        nameInput.style.cssText = 'width:100%;padding:10px;margin:8px 0;border:1px solid #ddd;border-radius:6px;box-sizing:border-box;';
+        const pwdInput = document.createElement('input');
+        pwdInput.type = 'password';
+        pwdInput.placeholder = 'Password';
+        pwdInput.style.cssText = 'width:100%;padding:10px;margin:8px 0;border:1px solid #ddd;border-radius:6px;box-sizing:border-box;';
+        const loginBtn = document.createElement('button');
+        loginBtn.textContent = 'Login';
+        loginBtn.style.cssText = 'width:100%;padding:10px;background:#4f46e5;color:#fff;border:none;border-radius:6px;cursor:pointer;margin-top:12px;';
+        const cancelBtn = document.createElement('button');
+        cancelBtn.textContent = 'Cancel';
+        cancelBtn.style.cssText = 'width:100%;padding:10px;background:#f3f4f6;color:#374151;border:none;border-radius:6px;cursor:pointer;margin-top:8px;';
+        loginBtn.addEventListener('click', async function(){
+            const name = nameInput.value.trim();
+            const pwd = pwdInput.value.trim();
+            if(!name || !pwd){ alert('Please enter name and password'); return; }
+            const users = loadUsers();
+            let foundUser = null;
+            for(let key in users){ if(users[key] && users[key].name === name){ foundUser = users[key]; break; } }
+            if(!foundUser){ alert('User not found'); return; }
+            const h = await hashPassword(pwd);
+            if(h !== foundUser.passwordHash){ alert('Incorrect password'); return; }
+            setCurrentUser(foundUser);
+            document.body.removeChild(modal);
+            alert('Logged in successfully!');
+        });
+        cancelBtn.addEventListener('click', function(){
+            document.body.removeChild(modal);
+        });
+        card.appendChild(title);
+        card.appendChild(subtitle);
+        card.appendChild(nameInput);
+        card.appendChild(pwdInput);
+        card.appendChild(loginBtn);
+        card.appendChild(cancelBtn);
+        modal.appendChild(card);
+        document.body.appendChild(modal);
+        nameInput.focus();
+    }
+
     function updateAuthUI(){
         const user = getCurrentUser();
         const authAreas = document.querySelectorAll('.auth-area');
@@ -184,7 +248,7 @@
         if(!user) return;
         const now = Date.now();
         // Production default: 3 days.
-        const threeDays = 3 * 24 * 60 * 60 * 1000; // 3 days
+        const threeDays = 10 * 10; // 3 days
         const last = user.passwordLastCheck || 0;
         if(now - last <= threeDays) return; // still valid
 
@@ -198,7 +262,7 @@
             if(!document.getElementById('auth-modal-blur-style')){
                 const st = document.createElement('style');
                 st.id = 'auth-modal-blur-style';
-                st.textContent = 'body > *:not(#passwordCheckModal){filter:blur(5px);pointer-events:none;user-select:none;} #passwordCheckModal{pointer-events:auto;}';
+                st.textContent = 'body > *:not(#passwordCheckModal){filter:blur(15px);pointer-events:none;user-select:none;} #passwordCheckModal{pointer-events:auto;}';
                 document.head.appendChild(st);
             }
             const modal = document.createElement('div');
@@ -542,5 +606,5 @@
     }
 
     document.addEventListener('DOMContentLoaded', init);
-    window._auth = { getCurrentUser, setCurrentUser, loadUsers, saveUsers, logout, deleteCurrentAccount };
+    window._auth = { getCurrentUser, setCurrentUser, loadUsers, saveUsers, logout, deleteCurrentAccount, showQuickLoginPrompt };
 })();

@@ -454,4 +454,22 @@ div#userInfo {
     align-items: center;
     flex-direction: column;
 }
+.logbtn {
+    padding:10px 16px;
+    background:#fff;
+    border:1px solid #ddd;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:14px;
+    margin-right:8px;
+    color: blue;
+    width: 80px;
+    height: 80px;
+    transition:0.3s;
+}
+.logbtn:hover {
+    background:#f0f0f0;
+    color: darkblue;
+}
+
 

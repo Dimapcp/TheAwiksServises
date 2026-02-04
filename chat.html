@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Чат</title>
+<link rel="stylesheet" href="css/chatstyle.css" />
+</head>
+<body>
+    <div class="app">
+        <div class="card chatWindow">
+        <h3>Общий чат</h3>
+        <div class="messages" id="messages"></div>
+        <div class="inputRow">
+        <input id="chatInput" placeholder="Введите сообщение..." />
+        <button id="sendBtn" class="btn">Отправить</button>
+        </div>
+    </div>
+<div class="sidebar card">
+<div id="userPanel"></div>
+<button id="openAccount" class="linkBtn" onclick="location.href='accaunt.html'">Открыть аккаунт</button>
+<button id="logoutBtn" class="btn" onclick="location.href='index.html'">Выйти</button>
+</div>
+</div>
+
+
+<script src="js/account.js"></script>
+<script src="js/chat.js"></script>
+</body>
+</html>

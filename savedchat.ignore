@@ -1,0 +1,70 @@
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--muted:#7b7f88}
+body{font-family:Inter, system-ui, Arial;background:var(--bg);margin:0;padding:24px;display:flex;justify-content:center}
+.app{width:720px;max-width:96%;display:grid;grid-template-columns:1fr 320px;gap:16px}
+.card{background:var(--card);border-radius:12px;padding:12px;box-shadow:0 6px 20px rgba(15,23,42,0.06)}
+.chatWindow{height:520px;display:flex;flex-direction:column}
+.messages{flex:1;overflow:auto;padding:12px;border-radius:8px;background:#fafafa;border:1px solid #eee}
+.msg{display:flex;gap:10px;padding:8px;border-radius:8px;margin-bottom:8px}
+.msg .meta{font-size:12px;color:var(--muted)}
+.msg.me{background:linear-gradient(90deg,#eef2ff,white)}
+.msg .avatar{width:40px;height:40px;border-radius:8px;object-fit:cover}
+.inputRow{display:flex;gap:8px;margin-top:12px}
+.inputRow input{flex:1;padding:10px;border-radius:8px;border:1px solid #ddd}
+.btn{padding:10px 14px;border-radius:8px;border:none;background:#4f46e5;color:white;cursor:pointer}
+.sidebar{display:flex;flex-direction:column;gap:12px}
+.userBox{display:flex;gap:12px;align-items:center}
+.userBox img{width:64px;height:64px;border-radius:10px;object-fit:cover}
+.small{font-size:13px;color:var(--muted)}
+.linkBtn{background:#eef2ff;color:#1e3a8a;border-radius:8px;padding:8px;border:none;cursor:pointer}
+.emptyHint{padding:20px;text-align:center;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="card chatWindow" id="mainCard">
+<h3>Общий чат</h3>
+<div class="messages" id="messages"></div>
+<div class="inputRow">
+<input id="chatInput" placeholder="Введите сообщение..." />
+<button id="sendBtn" class="btn">Отправить</button>
+</div>
+<div class="small" style="margin-top:8px">Сообщения сохраняются в localStorage и разделяются с вашим аккаунтом (ключ dev_chat).</div>
+</div>
+
+
+<div class="sidebar card">
+<div id="userPanel">
+<!-- user info will be rendered here -->
+</div>
+<div>
+<button id="openAccount" class="linkBtn">Открыть страницу аккаунта</button>
+<button id="logoutBtn" style="margin-top:8px" class="btn">Выйти</button>
+</div>
+<div style="margin-top:12px">
+<h4>Подсказки</h4>
+<ul style="padding-left:18px;margin:6px 0" class="small">
+<li>Чат использует тот же ключ dev_chat, что и ваш account.js.</li>
+<li>Если в account.js есть window._auth, кнопки попытаются его использовать.</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+<script>
+// Интеграция с вашей системой аккаунтов: читаем localStorage/currentUser и dev_chat
+function getCurrentUser(){
+try{ return JSON.parse(localStorage.getItem('currentUser') || 'null'); }catch(e){ return null; }
+}
+function loadChat(){
+try{ return JSON.parse(localStorage.getItem('dev_chat') || '[]'); }catch(e){ return []; }
+}
+function saveChat(arr){ localStorage.setItem('dev_chat', JSON.stringify(arr)); }
+
+
+const messagesEl = document.getElementById('messages');
+const input = document.getElementById('chatInput');
+const sendBtn = document.getElementById('sendBtn');
+const userPanel = document.getElementById('userPanel');
+</script>
