@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="css/devstyle.css">
     <script src="js/search.js" defer></script>
     <script src="js/goodscrool.js" defer></script>
+    <script src="js/dev.js" defer></script>
     <link rel="icon" href="images/logo.jpg" type="image/jpg">
     <title>Dev Page</title>
 </head>
@@ -28,6 +29,63 @@
         <li>Make bot-check</li>
         <li> ??? </li>
     </ul>
+    <section id="devDashboard" class="dev-section">
+
+    <h2>Admin Dashboard</h2>
+
+    <!-- Создание / редактирование -->
+    <div class="dev-block">
+        <h3>Create / Edit User</h3>
+
+        <input type="text" id="dev_name" placeholder="User Name">
+        <input type="email" id="dev_email" placeholder="User Email">
+
+        <select id="dev_role">
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+        </select>
+
+        <button id="saveUserBtn">Save User</button>
+    </div>
+
+    <!-- Управление -->
+    <div class="dev-block">
+        <h3>Manage User</h3>
+
+        <select id="userSelect"></select>
+
+        <div class="dev-actions">
+            <button id="addPendingBtn">+ Pending</button>
+            <button id="addReadyBtn">+ Ready</button>
+
+            <input type="number" id="moneyAmount" placeholder="Money">
+            <button id="addMoneyBtn">Add Money</button>
+
+            <button id="deleteUserBtn" class="danger">Delete</button>
+        </div>
+    </div>
+
+    <!-- Таблица -->
+    <div class="dev-block">
+        <h3>All Users</h3>
+
+        <table id="usersTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Pending</th>
+                    <th>Ready</th>
+                    <th>Money</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+</section>
+
    <p> Stuff status: 2/3 active, ready to work, 3 peaple in team</p>
    <p class="fornowall">For now, all</p>
 </main>
