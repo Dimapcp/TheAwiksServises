@@ -1,7 +1,21 @@
 // ===============================
-// AUTH.JS (GitHub-ready version)
+// AUTH.JS — Stable GitHub Version
 // ===============================
 
+
+// ---------- SHA256 (sync wrapper) ----------
+function sha256Sync(str) {
+    const buffer = new TextEncoder().encode(str);
+    return crypto.subtle.digest("SHA-256", buffer)
+        .then(hash => {
+            return Array.from(new Uint8Array(hash))
+                .map(b => b.toString(16).padStart(2, "0"))
+                .join("");
+        });
+}
+
+
+// ---------- STORAGE ----------
 function getUsers() {
     return JSON.parse(localStorage.getItem("users")) || [];
 }
@@ -29,27 +43,26 @@ function logout() {
 }
 
 
-// ===============================
-// REGISTER
-// ===============================
-
-function register(name, email, password) {
+// ---------- REGISTER ----------
+async function register(name, email, password) {
     const users = getUsers();
 
-    const existing = users.find(u => u.email === email);
-    if (existing) {
+    if (users.find(u => u.email === email)) {
         alert("User already exists");
         return false;
     }
 
+    const hashed = await sha256Sync(password);
+
     const user = {
-        name,
-        email,
-        passwordHash: sha256(password),
+        name: name.trim(),
+        email: email.trim(),
+        passwordHash: hashed,
         avatar: "",
         orders_pending: 0,
         orders_ready: 0,
-        money_invested: 0
+        money_invested: 0,
+        role: "user"
     };
 
     users.push(user);
@@ -60,16 +73,14 @@ function register(name, email, password) {
 }
 
 
-// ===============================
-// LOGIN
-// ===============================
-
-function login(email, password) {
+// ---------- LOGIN ----------
+async function login(email, password) {
     const users = getUsers();
+    const hashed = await sha256Sync(password);
 
     const user = users.find(u =>
-        u.email === email &&
-        u.passwordHash === sha256(password)
+        u.email === email.trim() &&
+        u.passwordHash === hashed
     );
 
     if (!user) {
@@ -82,40 +93,31 @@ function login(email, password) {
 }
 
 
-// ===============================
-// UPDATE UI
-// ===============================
-
+// ---------- UI UPDATE ----------
 function updateAuthUI() {
     const user = getCurrentUser();
-    console.log("updateAuthUI called, user:", user);
 
-    const nameElements = document.querySelectorAll(".user-name");
-    const emailElements = document.querySelectorAll(".user-email");
+    console.log("updateAuthUI:", user);
+
+    const nameEls = document.querySelectorAll(".user-name");
+    const emailEls = document.querySelectorAll(".user-email");
     const authAreas = document.querySelectorAll(".auth-area");
 
     authAreas.forEach(area => {
-        if (user) {
-            area.classList.add("logged-in");
-        } else {
-            area.classList.remove("logged-in");
-        }
+        area.style.display = user ? "block" : "none";
     });
 
-    nameElements.forEach(el => {
+    nameEls.forEach(el => {
         el.textContent = user ? user.name : "Not signed in";
     });
 
-    emailElements.forEach(el => {
+    emailEls.forEach(el => {
         el.textContent = user ? user.email : "-";
     });
 }
 
 
-// ===============================
-// INIT
-// ===============================
-
+// ---------- INIT ----------
 document.addEventListener("DOMContentLoaded", function () {
 
     updateAuthUI();
@@ -132,64 +134,3 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
-const SECRET_KEY = "my_super_secret_key_2026";
-
-async function getKey() {
-    const enc = new TextEncoder();
-    const keyMaterial = await crypto.subtle.digest(
-        "SHA-256",
-        enc.encode(SECRET_KEY)
-    );
-
-    return crypto.subtle.importKey(
-        "raw",
-        keyMaterial,
-        { name: "AES-GCM" },
-        false,
-        ["encrypt", "decrypt"]
-    );
-}
-
-async function encrypt(data) {
-    const key = await getKey();
-    const iv = crypto.getRandomValues(new Uint8Array(12));
-    const encoded = new TextEncoder().encode(JSON.stringify(data));
-
-    const ciphertext = await crypto.subtle.encrypt(
-        { name: "AES-GCM", iv },
-        key,
-        encoded
-    );
-
-    return {
-        iv: Array.from(iv),
-        data: Array.from(new Uint8Array(ciphertext))
-    };
-}
-
-async function decrypt(encrypted) {
-    const key = await getKey();
-
-    const decrypted = await crypto.subtle.decrypt(
-        { name: "AES-GCM", iv: new Uint8Array(encrypted.iv) },
-        key,
-        new Uint8Array(encrypted.data)
-    );
-
-    return JSON.parse(new TextDecoder().decode(decrypted));
-}
-async function setCurrentUser(user) {
-    if (user) {
-        const encrypted = await encrypt(user);
-        localStorage.setItem("currentUser", JSON.stringify(encrypted));
-    } else {
-        localStorage.removeItem("currentUser");
-    }
-    updateAuthUI();
-}
-async function getCurrentUser() {
-    const stored = localStorage.getItem("currentUser");
-    if (!stored) return null;
-
-    return await decrypt(JSON.parse(stored));
-}
