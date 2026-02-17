@@ -281,6 +281,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const user = JSON.parse(localStorage.getItem("currentUser"));
 
     if (!user) {
-        window.location.href = "login.html";
+        window.location.href = "auth.html";
     }
 });
