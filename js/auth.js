@@ -1,7 +1,8 @@
 // ===============================
-// AUTH.JS (GitHub-ready version)
+// SIMPLE AUTH (100% GitHub Safe)
 // ===============================
 
+// ---------- STORAGE ----------
 function getUsers() {
     return JSON.parse(localStorage.getItem("users")) || [];
 }
@@ -28,25 +29,20 @@ function logout() {
     window.location.href = "login.html";
 }
 
-
-// ===============================
-// REGISTER
-// ===============================
-
+// ---------- REGISTER ----------
 function register(name, email, password) {
     const users = getUsers();
 
-    const existing = users.find(u => u.email === email);
-    if (existing) {
+    if (users.find(u => u.email === email)) {
         alert("User already exists");
         return false;
     }
 
     const user = {
-        name,
-        email,
-        passwordHash: sha256(password),
-        avatar: "",
+        name: name.trim(),
+        email: email.trim(),
+        password: password, // БЕЗ ШИФРОВКИ
+        role: "user",
         orders_pending: 0,
         orders_ready: 0,
         money_invested: 0
@@ -59,17 +55,13 @@ function register(name, email, password) {
     return true;
 }
 
-
-// ===============================
-// LOGIN
-// ===============================
-
+// ---------- LOGIN ----------
 function login(email, password) {
     const users = getUsers();
 
     const user = users.find(u =>
-        u.email === email &&
-        u.passwordHash === sha256(password)
+        u.email === email.trim() &&
+        u.password === password
     );
 
     if (!user) {
@@ -81,115 +73,34 @@ function login(email, password) {
     return true;
 }
 
-
-// ===============================
-// UPDATE UI
-// ===============================
-
+// ---------- UI ----------
 function updateAuthUI() {
     const user = getCurrentUser();
-    console.log("updateAuthUI called, user:", user);
 
-    const nameElements = document.querySelectorAll(".user-name");
-    const emailElements = document.querySelectorAll(".user-email");
-    const authAreas = document.querySelectorAll(".auth-area");
+    console.log("Auth check:", user);
 
-    authAreas.forEach(area => {
-        if (user) {
-            area.classList.add("logged-in");
-        } else {
-            area.classList.remove("logged-in");
-        }
-    });
+    const nameEls = document.querySelectorAll(".user-name");
+    const emailEls = document.querySelectorAll(".user-email");
 
-    nameElements.forEach(el => {
+    nameEls.forEach(el => {
         el.textContent = user ? user.name : "Not signed in";
     });
 
-    emailElements.forEach(el => {
+    emailEls.forEach(el => {
         el.textContent = user ? user.email : "-";
     });
 }
 
-
-// ===============================
-// INIT
-// ===============================
-
+// ---------- INIT ----------
 document.addEventListener("DOMContentLoaded", function () {
-
     updateAuthUI();
 
-    const logoutBtn = document.getElementById("logoutBtn");
-    if (logoutBtn) {
-        logoutBtn.addEventListener("click", logout);
-    }
-
-    // Sync between tabs
     window.addEventListener("storage", function (e) {
         if (e.key === "currentUser") {
             updateAuthUI();
         }
     });
+
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) logoutBtn.addEventListener("click", logout);
 });
-const SECRET_KEY = "my_super_secret_key_2026";
-
-async function getKey() {
-    const enc = new TextEncoder();
-    const keyMaterial = await crypto.subtle.digest(
-        "SHA-256",
-        enc.encode(SECRET_KEY)
-    );
-
-    return crypto.subtle.importKey(
-        "raw",
-        keyMaterial,
-        { name: "AES-GCM" },
-        false,
-        ["encrypt", "decrypt"]
-    );
-}
-
-async function encrypt(data) {
-    const key = await getKey();
-    const iv = crypto.getRandomValues(new Uint8Array(12));
-    const encoded = new TextEncoder().encode(JSON.stringify(data));
-
-    const ciphertext = await crypto.subtle.encrypt(
-        { name: "AES-GCM", iv },
-        key,
-        encoded
-    );
-
-    return {
-        iv: Array.from(iv),
-        data: Array.from(new Uint8Array(ciphertext))
-    };
-}
-
-async function decrypt(encrypted) {
-    const key = await getKey();
-
-    const decrypted = await crypto.subtle.decrypt(
-        { name: "AES-GCM", iv: new Uint8Array(encrypted.iv) },
-        key,
-        new Uint8Array(encrypted.data)
-    );
-
-    return JSON.parse(new TextDecoder().decode(decrypted));
-}
-async function setCurrentUser(user) {
-    if (user) {
-        const encrypted = await encrypt(user);
-        localStorage.setItem("currentUser", JSON.stringify(encrypted));
-    } else {
-        localStorage.removeItem("currentUser");
-    }
-    updateAuthUI();
-}
-async function getCurrentUser() {
-    const stored = localStorage.getItem("currentUser");
-    if (!stored) return null;
-
-    return await decrypt(JSON.parse(stored));
-}
