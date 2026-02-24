@@ -139,4 +139,49 @@
         }
     });
 
+    // Basic UI sync for header/account elements used across pages
+    function syncHeaderUI(){
+        const user = getCurrentUser();
+
+        // avatar
+        try{
+            const avatarEl = document.getElementById('authAvatar');
+            if(avatarEl){
+                if(user && user.avatar){ avatarEl.src = user.avatar; avatarEl.style.display = 'block'; }
+                else { avatarEl.style.display = 'none'; }
+            }
+        }catch(e){}
+
+        // account link
+        try{
+            const acc = document.getElementById('accountLink');
+            if(acc){
+                if(user){ acc.href = 'account.html'; acc.textContent = 'My Account'; }
+                else { acc.href = 'login.html'; acc.textContent = 'Sign in'; }
+            }
+        }catch(e){}
+
+        // logout button
+        try{
+            const logoutBtn = document.getElementById('logoutBtn');
+            if(logoutBtn){
+                if(user){ logoutBtn.style.display = 'inline-block'; }
+                else { logoutBtn.style.display = 'none'; }
+            }
+        }catch(e){}
+    }
+
+    window.addEventListener('auth-changed', syncHeaderUI);
+    document.addEventListener('DOMContentLoaded', function(){
+        syncHeaderUI();
+        // attach logout handler if present
+        const logoutBtn = document.getElementById('logoutBtn');
+        if(logoutBtn){
+            logoutBtn.addEventListener('click', function(){
+                if(window.Auth && typeof window.Auth.logout === 'function') window.Auth.logout();
+                syncHeaderUI();
+            });
+        }
+    });
+
 })();
