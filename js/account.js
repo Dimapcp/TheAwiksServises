@@ -212,6 +212,7 @@ function showConfirmModal(title, message, onConfirm){
 
 function init(){
 
+    // use new Auth API
     renderUser();
     renderChat();
 
@@ -247,7 +248,12 @@ function init(){
     if(logoutBtn){
         logoutBtn.addEventListener('click', function(){
             showConfirmModal('Logout','Are you sure?', function(){
-                localStorage.removeItem('currentUserEmail');
+                if(window.Auth && typeof window.Auth.logout === 'function'){
+                    window.Auth.logout();
+                } else {
+                    localStorage.removeItem('currentUserEmail');
+                    localStorage.removeItem('currentUser');
+                }
                 renderUser();
                 alert('Logged out');
             });
@@ -258,6 +264,14 @@ function init(){
     if(deleteBtn){
         deleteBtn.addEventListener('click', function(){
             showConfirmModal('Delete Account','This cannot be undone.', function(){
+
+                if(window.Auth && typeof window.Auth.deleteCurrentUser === 'function'){
+                    const ok = window.Auth.deleteCurrentUser();
+                    if(!ok) return alert('No account to delete');
+                    alert('Account deleted');
+                    location.href = 'index.html';
+                    return;
+                }
 
                 const email = localStorage.getItem('currentUserEmail');
                 if(!email) return;
@@ -273,8 +287,7 @@ function init(){
             });
         });
     }
-
+    
 }
 
-})();
 })();
