@@ -19,6 +19,9 @@
 </header>
 <main>
     <h1>Dev Page and notes</h1>
+    <div id="devNotifications" style="max-width:900px;margin:12px auto 0;padding:8px;">
+        <!-- notifications will appear here -->
+    </div>
     <p>Main bank-card:5168 7520 2967 2196</p>
     
     <ul class="upd-list">
@@ -56,10 +59,13 @@
 
         <div class="dev-actions">
             <button id="addPendingBtn">+ Pending</button>
+            <button id="subPendingBtn">- Pending</button>
             <button id="addReadyBtn">+ Ready</button>
+            <button id="subReadyBtn">- Ready</button>
 
             <input type="number" id="moneyAmount" placeholder="Money">
             <button id="addMoneyBtn">Add Money</button>
+            <button id="subMoneyBtn">Subtract Money</button>
 
             <button id="deleteUserBtn" class="danger">Delete</button>
         </div>

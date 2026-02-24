@@ -8,7 +8,7 @@ Security of The Awiks Websites. (yes all awiks website)
 | ------- | ------------------                    |
 | 4.0.x   | ???                                   |
 | 3.0.x   | ???                                   |
-| 2.0.x   | ???                                   |
+| 2.0.x   | Added cacaunt and pass system         |
 | < 1.0   | First security outcome                |
 
 ## Reporting a Vulnerability

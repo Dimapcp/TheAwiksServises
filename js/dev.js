@@ -133,6 +133,18 @@ function renderUsers() {
     });
 }
 
+// --- attention / notifications ---
+function addAttention(msg){
+    const area = document.getElementById('devNotifications');
+    if(!area) return;
+    const el = document.createElement('div');
+    el.style.cssText = 'background:#fff3cd;border:1px solid #ffeeba;padding:10px;margin-bottom:8px;border-radius:6px;color:#856404;display:flex;justify-content:space-between;align-items:center;gap:12px;';
+    el.innerHTML = `<span>${msg}</span><button style="background:transparent;border:none;cursor:pointer;font-weight:700">✕</button>`;
+    const btn = el.querySelector('button');
+    btn.addEventListener('click', ()=> el.remove());
+    area.insertBefore(el, area.firstChild);
+}
+
 function getSelectedUser() {
     const index = document.getElementById("userSelect").value;
     return users[index];
@@ -156,6 +168,7 @@ document.getElementById("saveUserBtn")?.addEventListener("click", () => {
     if (existing) {
         existing.name = name;
         existing.role = role;
+        addAttention('Updated user "' + name + '"');
     } else {
         users.push({
             name,
@@ -165,6 +178,7 @@ document.getElementById("saveUserBtn")?.addEventListener("click", () => {
             ready: 0,
             money: 0
         });
+        addAttention('Created user "' + name + '"');
     }
 
     saveToStorage();
@@ -177,6 +191,16 @@ document.getElementById("addPendingBtn")?.addEventListener("click", () => {
     user.pending++;
     saveToStorage();
     renderUsers();
+    addAttention('Incremented pending for "' + user.name + '"');
+});
+
+document.getElementById("subPendingBtn")?.addEventListener("click", () => {
+    const user = getSelectedUser();
+    if (!user) return;
+    if (user.pending > 0) user.pending--;
+    saveToStorage();
+    renderUsers();
+    addAttention('Decremented pending for "' + user.name + '"');
 });
 
 document.getElementById("addReadyBtn")?.addEventListener("click", () => {
@@ -185,6 +209,16 @@ document.getElementById("addReadyBtn")?.addEventListener("click", () => {
     user.ready++;
     saveToStorage();
     renderUsers();
+    addAttention('Incremented ready for "' + user.name + '"');
+});
+
+document.getElementById("subReadyBtn")?.addEventListener("click", () => {
+    const user = getSelectedUser();
+    if (!user) return;
+    if (user.ready > 0) user.ready--;
+    saveToStorage();
+    renderUsers();
+    addAttention('Decremented ready for "' + user.name + '"');
 });
 
 document.getElementById("addMoneyBtn")?.addEventListener("click", () => {
@@ -194,6 +228,18 @@ document.getElementById("addMoneyBtn")?.addEventListener("click", () => {
     user.money += amount;
     saveToStorage();
     renderUsers();
+    addAttention('Added ' + amount + ' money to "' + user.name + '"');
+});
+
+document.getElementById("subMoneyBtn")?.addEventListener("click", () => {
+    const user = getSelectedUser();
+    const amount = parseInt(document.getElementById("moneyAmount").value);
+    if (!user || isNaN(amount)) return;
+    user.money -= amount;
+    if (user.money < 0) user.money = 0;
+    saveToStorage();
+    renderUsers();
+    addAttention('Subtracted ' + amount + ' money from "' + user.name + '"');
 });
 
 document.getElementById("deleteUserBtn")?.addEventListener("click", () => {
@@ -202,8 +248,12 @@ document.getElementById("deleteUserBtn")?.addEventListener("click", () => {
     users.splice(index, 1);
     saveToStorage();
     renderUsers();
+    addAttention('Deleted user at index ' + index);
 });
 
 renderUsers();
-
+// show a small start notification to verify notifications area
+if(document.getElementById('devNotifications')){
+    addAttention('Admin panel loaded');
+}
 });

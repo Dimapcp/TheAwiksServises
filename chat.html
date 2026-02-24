@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Чат</title>
 <link rel="stylesheet" href="css/chatstyle.css" />
+<script src="js/auth.js" defer></script>
 </head>
 <body>
     <div class="app">
@@ -18,13 +19,35 @@
     </div>
 <div class="sidebar card">
 <div id="userPanel"></div>
-<button id="openAccount" class="linkBtn" onclick="location.href='accaunt.html'">Открыть аккаунт</button>
-<button id="logoutBtn" class="btn" onclick="location.href='index.html'">Выйти</button>
+<button id="openAccount" class="linkBtn">Открыть аккаунт</button>
+<button id="logoutBtn" class="btn">Выйти</button>
 </div>
 </div>
 
 
 <script src="js/account.js"></script>
 <script src="js/chat.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    const openAccount = document.getElementById('openAccount');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    if(openAccount){
+        openAccount.addEventListener('click', function(e){
+            const user = (window.Auth && typeof window.Auth.getCurrentUser === 'function') ? window.Auth.getCurrentUser() : null;
+            if(user){ location.href = 'account.html'; }
+            else if(window._auth && typeof window._auth.showQuickLoginPrompt === 'function'){ window._auth.showQuickLoginPrompt(); }
+            else { location.href = 'login.html'; }
+        });
+    }
+
+    if(logoutBtn){
+        logoutBtn.addEventListener('click', function(){
+            if(window.Auth && typeof window.Auth.logout === 'function') window.Auth.logout();
+            location.href = 'index.html';
+        });
+    }
+});
+</script>
 </body>
 </html>
