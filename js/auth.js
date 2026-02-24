@@ -18,8 +18,10 @@ function getCurrentUser() {
 function setCurrentUser(user) {
     if (user) {
         localStorage.setItem("currentUser", JSON.stringify(user));
+        try{ localStorage.setItem("currentUserEmail", user.email); }catch(e){}
     } else {
         localStorage.removeItem("currentUser");
+        localStorage.removeItem("currentUserEmail");
     }
     updateAuthUI();
 }
@@ -43,9 +45,9 @@ function register(name, email, password) {
         email: email.trim(),
         password: password, // БЕЗ ШИФРОВКИ
         role: "user",
-        orders_pending: 0,
-        orders_ready: 0,
-        money_invested: 0
+        pending: 0,
+        ready: 0,
+        money: 0
     };
 
     users.push(user);
@@ -104,3 +106,15 @@ document.addEventListener("DOMContentLoaded", function () {
     const logoutBtn = document.getElementById("logoutBtn");
     if (logoutBtn) logoutBtn.addEventListener("click", logout);
 });
+
+// Expose a minimal global auth helper used by pages (`window._auth`)
+if (!window._auth) {
+    window._auth = {
+        showQuickLoginPrompt: function(){
+            // If already signed in, do nothing
+            if (getCurrentUser()) return;
+            // Prefer native login page for simplicity on GitHub Pages
+            window.location.href = 'login.html';
+        }
+    };
+}

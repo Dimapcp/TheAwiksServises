@@ -277,10 +277,4 @@ function init(){
 }
 
 })();
-document.addEventListener("DOMContentLoaded", function () {
-    const user = JSON.parse(localStorage.getItem("currentUser"));
-
-    if (!user) {
-        window.location.href = "account.html";
-    }
-});
+})();
