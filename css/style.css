@@ -2,19 +2,45 @@
     font-family: "Oswald";
     scroll-behavior: smooth;
 }
-.near_nav_logo {
-    width: 200px;
-    height:240px;
+nav {
+  display: flex;
+  align-items: center;
+  background-color: black;
+}
+
+.nav-list {
+  display: flex;
+  gap: 40px;
+}
+
+.search-form {
+  margin-left: auto;
+}
+@media (max-width: 768px) {
+
+  nav {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .nav-list {
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+  }
+
+  .search-form {
+    margin: 10px 0 0 0;
+    width: 100%;
+  }
+
+  .search-form input {
+    width: 100%;
+  }
 
 }
 body {
   margin: 0;
-}
-nav {
-  display: flex;
-  align-items: center;        
-  background-color: black;
-  padding: 0 0 0 0;
 }
 
 /* .nav-list {
@@ -22,6 +48,11 @@ nav {
     display: flex;
     align-items:  center;
 } */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
 button{
     margin: 5px;
     padding: 0px;
@@ -32,6 +63,12 @@ button{
     box-shadow: none;
     padding-inline: 0px;
     transition: 0.3s;
+}
+
+
+html, body {
+  overflow-x: auto;
+  overflow-y: auto;
 }
  button:hover{
     margin: 5px;
@@ -44,14 +81,7 @@ button{
     padding-inline: 0px;
     cursor: pointer;
 }
-nav {
-    display: flex;
-    align-items: safe,center;
-    background-color: black;
-}
-.nav-item {
-  font-size: 20px;
-}
+
 
 /* .nav-item {
     display: flex;
@@ -59,34 +89,7 @@ nav {
     padding: 20px;
     font-size: 20px;
 } */
- .nav-list {
-  list-style: none;
-  display: flex;
-  align-items: center;
-  gap: 40px;                  
-  margin: 0;
-  padding: 0;
-}
 
-.search-form input {
-  padding: 8px 14px;
-  font-size: 16px;
-  border-radius: 6px;
-  border: 1px solid #444;
-  background: #111;
-  color: white;
-}
-
-.search-form input::placeholder {
-  color: #888;
-}
-.search-form {
-  position: static;
-}
-.search-form {
-  margin-left: auto;
-  margin-right: 100px;         
-}
 .Big_buton_take_product {
     /* Correct path and extension (file is in ../images/ and is .png) */
     background-image: url('../images/ofise.png');
@@ -199,7 +202,11 @@ div.chelik {
     margin: 0 auto 30px;
     border-radius: 10%;
     font-size: 25px;
-    width:1025px;
+
+    width: 100%;
+    max-width: 1025px;
+    padding: 20px;
+    box-sizing: border-box;
 }
 .ranks {
     font-size: 20px;
@@ -338,16 +345,19 @@ button.servbuton2.servbuton2--disabled:hover {
     background-color: darkred;
 }
 div.creaitonofhatred {
-    width: 600px;
-    height: 600px;
-    border-radius: 10%;
-    background-color: aliceblue;
-    margin: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
     flex-direction: column;
+    text-align: center;
+    background-color: aliceblue;
+    margin: 0 auto 30px;
+    border-radius: 10%;
+    font-size: 25px;
+    width: 100%;
+    max-width: 1025px;
+    padding: 20px;
+    box-sizing: border-box;
 }
 img.cohimg {
     width: 500px;
